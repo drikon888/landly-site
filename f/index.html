@@ -1,0 +1,116 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Landly</title><meta name="robots" content="noindex"><meta name="description" content="A flight shared with Landly.">
+<meta property="og:site_name" content="Landly"><meta property="og:title" content="A flight shared with Landly"><meta property="og:description" content="Follow it live: delays, gate and when it really lands."><meta property="og:image" content="https://applandly.com/icon.png"><meta property="og:type" content="website"><meta name="twitter:card" content="summary">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Archivo:wght@700;800&family=IBM+Plex+Mono:wght@500&family=IBM+Plex+Sans:wght@400;600&display=swap" rel="stylesheet">
+<style>:root{--night:#0B1626;--panel:#13233A;--line:#24384F;--yellow:#FFD23F;--text:#F2F5F8;--muted:#A7B4C4}
+*{box-sizing:border-box}html{background:var(--night)}body{margin:0;color:var(--text);font:400 17px/1.6 'IBM Plex Sans',system-ui,sans-serif;background:radial-gradient(120% 50% at 50% 0%,#1B3355 0%,var(--night) 60%) no-repeat}
+main{max-width:720px;margin:0 auto;padding:40px 20px 80px}a{color:var(--yellow)}
+.brand{display:flex;align-items:center;gap:12px;text-decoration:none;color:var(--text);font:800 24px Archivo,system-ui,sans-serif}
+h1{font:800 clamp(32px,6vw,48px)/1.08 Archivo,system-ui,sans-serif;letter-spacing:-.02em;margin:36px 0 8px}
+h2{font:700 21px/1.3 Archivo,system-ui,sans-serif;margin:32px 0 6px}
+.muted{color:var(--muted)}.updated{font:500 13px 'IBM Plex Mono',monospace;color:var(--muted);text-transform:uppercase;letter-spacing:.08em}
+nav.langs{display:flex;flex-wrap:wrap;gap:8px;margin-top:40px;padding-top:20px;border-top:1px solid var(--line)}
+nav.langs a{color:var(--muted);text-decoration:none;border:1px solid var(--line);border-radius:999px;padding:4px 12px;font-size:14px}
+nav.langs a[aria-current]{color:var(--night);background:var(--yellow);border-color:var(--yellow)}
+.cards{display:grid;gap:12px;margin-top:28px}.cards a{display:block;padding:18px 20px;border-radius:16px;background:var(--panel);border:1px solid var(--line);color:var(--text);text-decoration:none;font-weight:600}
+footer{margin-top:40px;font-size:14px;color:var(--muted)}
+main{max-width:520px}
+.mono{font:500 13px 'IBM Plex Mono',monospace;color:var(--muted);text-transform:uppercase;letter-spacing:.08em}
+.card{margin-top:28px;padding:22px 20px;border-radius:22px;background:var(--panel);border:1px solid var(--line)}
+.status{display:inline-block;margin-top:14px;padding:4px 12px;border-radius:999px;font:600 14px 'IBM Plex Sans',sans-serif;background:rgba(255,255,255,.08)}
+.big{font:800 clamp(30px,8vw,42px)/1.1 Archivo,system-ui,sans-serif;letter-spacing:-.02em;margin:12px 0 4px}
+.route{display:flex;justify-content:space-between;align-items:flex-end;margin-top:22px}
+.code{font:800 34px/1 Archivo,system-ui,sans-serif}.right{text-align:right}.small{font-size:14px;color:var(--muted)}
+.bar{position:relative;height:6px;border-radius:3px;background:var(--line);margin:14px 0 4px}
+.fill{position:absolute;left:0;top:0;bottom:0;border-radius:3px;background:var(--yellow);width:0;transition:width .6s}
+.tiles{display:flex;gap:10px;margin-top:18px}.tile{flex:1;padding:10px 12px;border-radius:14px;border:1px solid var(--line)}
+.tile b{display:block;font:800 22px Archivo,system-ui,sans-serif}
+.stores{display:flex;flex-wrap:wrap;align-items:center;gap:12px;margin-top:16px}
+.store{display:block;line-height:0}.store img{display:block;height:48px;width:auto}
+/* Google's picture has an empty border a quarter of its size: Apple's has none. */
+.store.play img{height:62px;margin:-7px -5px}
+.more{display:inline-block;margin-top:16px;color:var(--muted);font-size:14px}
+.cta{margin-top:28px}.cta h2{margin:0 0 4px}.btn{display:inline-block;margin-top:12px;padding:12px 22px;border-radius:999px;background:var(--yellow);color:var(--night);font-weight:600;text-decoration:none}
+[hidden]{display:none!important}</style></head><body><main>
+<a class="brand" href="../index.html"><svg width="40" height="40" viewBox="0 0 120 120" aria-hidden="true"><rect width="120" height="120" rx="27" fill="#0D0F12"/><rect x="1" y="1" width="118" height="118" rx="26" fill="none" stroke="#24384F" stroke-width="2"/><path d="M60 22 C42 22 30 35 30 52 C30 72 60 98 60 98 C60 98 90 72 90 52 C90 35 78 22 60 22 Z" fill="#FFD23F"/><path d="M47 52 L57 62 L74 44" fill="none" stroke="#0D0F12" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/></svg>Landly</a>
+<p id="msg" class="muted" style="margin-top:32px"></p>
+<section id="card" class="card" hidden>
+  <div id="head" class="mono"></div>
+  <span id="status" class="status"></span>
+  <div id="big" class="big"></div>
+  <div id="sub" class="small"></div>
+  <div class="route"><div><div id="fromCode" class="code"></div><div id="fromText" class="small"></div></div>
+  <div class="right"><div id="toCode" class="code"></div><div id="toText" class="small"></div></div></div>
+  <div class="bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" id="bar"><div id="fill" class="fill"></div></div>
+  <div id="tiles" class="tiles"></div>
+  <p id="updated" class="mono" style="margin:18px 0 0"></p>
+</section>
+<section class="cta"><h2 id="ctaTitle"></h2><p id="ctaText" class="muted" style="margin:0"></p>
+<div class="stores"><a class="store" id="apple" href="https://apps.apple.com/app/id6836945784"><img id="appleImg" alt=""></a>
+<a class="store play" id="play" href="https://play.google.com/store/apps/details?id=app.landly.flights"><img id="playImg" alt=""></a></div>
+<a id="cta" class="more" href="../index.html"></a>
+<p id="note" class="small" style="margin-top:20px"></p></section>
+</main><script>
+(function(){
+var S={"en":{"title":"Shared flight","loading":"Loading the flight…","scheduled":"Scheduled","onTime":"On time","boarding":"Boarding","gateClosed":"Gate closed","inFlight":"In flight","landed":"Landed","unconfirmed":"Landing not confirmed","cancelled":"Cancelled","diverted":"Diverted","arrivesAt":"Arrives at {{time}}","landsIn":"Lands in {{span}}","landedAt":"Landed at {{time}}","expectedAt":"Expected at {{time}}","inCity":"{{city}} · airport time","late":"{{span}} late","early":"{{span}} early","wasAt":"scheduled {{time}}","departs":"Departs {{time}}","departed":"Departed {{time}}","terminal":"Terminal","gate":"Gate","belt":"Baggage belt","min":"{{m}} min","hm":"{{h}} h {{m}} min","updated":"Updates by itself every minute","notFound":"This link is no longer active.","expired":"This flight is over: the link has expired.","noData":"No live data for this flight yet. Come back closer to departure.","error":"We could not load the flight. Check your connection.","ctaTitle":"Shared with Landly, the app for people who fly","ctaText":"Follow any flight: delays, gate, where the plane is and when it really lands.","cta":"Discover Landly","note":"This page shows the flight only, never who shared it.","getApp":"Get Landly, the app for people who fly","appStoreSmall":"Download on the","playSmall":"Get it on"},"it":{"title":"Volo condiviso","loading":"Carico il volo…","scheduled":"In programma","onTime":"In orario","boarding":"Imbarco","gateClosed":"Gate chiuso","inFlight":"In volo","landed":"Atterrato","unconfirmed":"Atterraggio non confermato","cancelled":"Cancellato","diverted":"Dirottato","arrivesAt":"Arriva alle {{time}}","landsIn":"Atterra tra {{span}}","landedAt":"Atterrato alle {{time}}","expectedAt":"Previsto alle {{time}}","inCity":"{{city}} · ora dell'aeroporto","late":"{{span}} di ritardo","early":"{{span}} di anticipo","wasAt":"previsto alle {{time}}","departs":"Parte alle {{time}}","departed":"Partito alle {{time}}","terminal":"Terminal","gate":"Gate","belt":"Nastro bagagli","min":"{{m}} min","hm":"{{h}} h {{m}} min","updated":"Si aggiorna da sola ogni minuto","notFound":"Questo link non è più attivo.","expired":"Il volo è concluso: il link è scaduto.","noData":"Ancora nessun dato in diretta per questo volo. Torna più vicino alla partenza.","error":"Non siamo riusciti a caricare il volo. Controlla la connessione.","ctaTitle":"Condiviso con Landly, l'app di chi vola","ctaText":"Segui qualsiasi volo: ritardi, gate, dov'è l'aereo e quando atterra davvero.","cta":"Scopri Landly","note":"Questa pagina mostra solo il volo, mai chi l'ha condiviso.","getApp":"Scarica Landly, l'app di chi vola","appStoreSmall":"Scarica su","playSmall":"Disponibile su"},"es":{"title":"Vuelo compartido","loading":"Cargando el vuelo…","scheduled":"Programado","onTime":"A tiempo","boarding":"Embarque","gateClosed":"Puerta cerrada","inFlight":"En vuelo","landed":"Aterrizado","unconfirmed":"Aterrizaje no confirmado","cancelled":"Cancelado","diverted":"Desviado","arrivesAt":"Llega a las {{time}}","landsIn":"Aterriza en {{span}}","landedAt":"Aterrizó a las {{time}}","expectedAt":"Previsto a las {{time}}","inCity":"{{city}} · hora del aeropuerto","late":"{{span}} de retraso","early":"{{span}} de adelanto","wasAt":"previsto a las {{time}}","departs":"Sale a las {{time}}","departed":"Salió a las {{time}}","terminal":"Terminal","gate":"Puerta","belt":"Cinta de equipaje","min":"{{m}} min","hm":"{{h}} h {{m}} min","updated":"Se actualiza sola cada minuto","notFound":"Este enlace ya no está activo.","expired":"El vuelo ha terminado: el enlace ha caducado.","noData":"Todavía no hay datos en directo de este vuelo. Vuelve más cerca de la salida.","error":"No pudimos cargar el vuelo. Revisa tu conexión.","ctaTitle":"Compartido con Landly, la app de quienes vuelan","ctaText":"Sigue cualquier vuelo: retrasos, puerta, dónde está el avión y cuándo aterriza de verdad.","cta":"Descubre Landly","note":"Esta página muestra solo el vuelo, nunca quién lo compartió.","getApp":"Descarga Landly, la app de quienes vuelan","appStoreSmall":"Consíguelo en el","playSmall":"Disponible en"},"de":{"title":"Geteilter Flug","loading":"Flug wird geladen…","scheduled":"Geplant","onTime":"Pünktlich","boarding":"Boarding","gateClosed":"Gate geschlossen","inFlight":"In der Luft","landed":"Gelandet","unconfirmed":"Landung nicht bestätigt","cancelled":"Annulliert","diverted":"Umgeleitet","arrivesAt":"Ankunft um {{time}}","landsIn":"Landet in {{span}}","landedAt":"Gelandet um {{time}}","expectedAt":"Erwartet um {{time}}","inCity":"{{city}} · Ortszeit am Flughafen","late":"{{span}} Verspätung","early":"{{span}} früher","wasAt":"geplant {{time}}","departs":"Abflug um {{time}}","departed":"Abgeflogen um {{time}}","terminal":"Terminal","gate":"Gate","belt":"Gepäckband","min":"{{m}} Min.","hm":"{{h}} Std. {{m}} Min.","updated":"Aktualisiert sich jede Minute von selbst","notFound":"Dieser Link ist nicht mehr aktiv.","expired":"Der Flug ist vorbei: Der Link ist abgelaufen.","noData":"Noch keine Live-Daten für diesen Flug. Schau kurz vor dem Abflug wieder vorbei.","error":"Der Flug konnte nicht geladen werden. Prüfe deine Verbindung.","ctaTitle":"Geteilt mit Landly, der App für alle, die fliegen","ctaText":"Folge jedem Flug: Verspätungen, Gate, wo das Flugzeug ist und wann es wirklich landet.","cta":"Landly entdecken","note":"Diese Seite zeigt nur den Flug, nie, wer ihn geteilt hat.","getApp":"Hol dir Landly, die App für alle, die fliegen","appStoreSmall":"Laden im","playSmall":"Jetzt bei"},"fr":{"title":"Vol partagé","loading":"Chargement du vol…","scheduled":"Prévu","onTime":"À l'heure","boarding":"Embarquement","gateClosed":"Porte fermée","inFlight":"En vol","landed":"Atterri","unconfirmed":"Atterrissage non confirmé","cancelled":"Annulé","diverted":"Dérouté","arrivesAt":"Arrive à {{time}}","landsIn":"Atterrit dans {{span}}","landedAt":"Atterri à {{time}}","expectedAt":"Prévu à {{time}}","inCity":"{{city}} · heure de l'aéroport","late":"{{span}} de retard","early":"{{span}} d'avance","wasAt":"prévu à {{time}}","departs":"Départ à {{time}}","departed":"Parti à {{time}}","terminal":"Terminal","gate":"Porte","belt":"Tapis à bagages","min":"{{m}} min","hm":"{{h}} h {{m}} min","updated":"Se met à jour toute seule chaque minute","notFound":"Ce lien n'est plus actif.","expired":"Le vol est terminé : le lien a expiré.","noData":"Pas encore de données en direct pour ce vol. Reviens plus près du départ.","error":"Impossible de charger le vol. Vérifie ta connexion.","ctaTitle":"Partagé avec Landly, l'app de ceux qui prennent l'avion","ctaText":"Suis n'importe quel vol : retards, porte, où est l'avion et quand il atterrit vraiment.","cta":"Découvrir Landly","note":"Cette page montre seulement le vol, jamais qui l'a partagé.","getApp":"Téléchargez Landly, l'app de ceux qui volent","appStoreSmall":"Télécharger dans l'","playSmall":"Disponible sur"},"pt-BR":{"title":"Voo compartilhado","loading":"Carregando o voo…","scheduled":"Programado","onTime":"No horário","boarding":"Embarque","gateClosed":"Portão fechado","inFlight":"Em voo","landed":"Pousou","unconfirmed":"Pouso não confirmado","cancelled":"Cancelado","diverted":"Desviado","arrivesAt":"Chega às {{time}}","landsIn":"Pousa em {{span}}","landedAt":"Pousou às {{time}}","expectedAt":"Previsto às {{time}}","inCity":"{{city}} · horário do aeroporto","late":"{{span}} de atraso","early":"{{span}} adiantado","wasAt":"previsto às {{time}}","departs":"Parte às {{time}}","departed":"Partiu às {{time}}","terminal":"Terminal","gate":"Portão","belt":"Esteira de bagagem","min":"{{m}} min","hm":"{{h}} h {{m}} min","updated":"Atualiza sozinha a cada minuto","notFound":"Este link não está mais ativo.","expired":"O voo terminou: o link expirou.","noData":"Ainda não há dados ao vivo deste voo. Volte mais perto da partida.","error":"Não conseguimos carregar o voo. Verifique sua conexão.","ctaTitle":"Compartilhado com o Landly, o app de quem voa","ctaText":"Acompanhe qualquer voo: atrasos, portão, onde está o avião e quando ele pousa de verdade.","cta":"Conheça o Landly","note":"Esta página mostra só o voo, nunca quem o compartilhou.","getApp":"Baixe o Landly, o app de quem voa","appStoreSmall":"Baixar na","playSmall":"Disponível no"}};var API="https://aiywqucwebtmogndrags.supabase.co/functions/v1/share";
+var langs=(navigator.languages||[navigator.language||'en']).map(function(x){return String(x).toLowerCase()});var L='en';
+for(var i=0;i<langs.length;i++){if(langs[i].indexOf('pt')===0){L='pt-BR';break}var b=langs[i].slice(0,2);if(S[b]){L=b;break}}
+var s=S[L];document.documentElement.lang=L;
+function $(id){return document.getElementById(id)}
+function fill(t,v){return String(t).replace(/\{\{(\w+)\}\}/g,function(_,k){return v[k]==null?'':v[k]})}
+function span(min){var m=Math.abs(Math.round(min));return m<60?fill(s.min,{m:m}):fill(s.hm,{h:Math.floor(m/60),m:m%60})}
+function label(n){return String(n).replace(/\s+/g,'').replace(/^([A-Z0-9]{2})(\d)/,'$1 $2')}
+var GOOD='#4FD1A5',WARN='#FF8A4C',BAD='#FF5A6A',YELLOW='#FFD23F',MUTED='#A7B4C4';
+$('ctaTitle').textContent=s.getApp;var B={en:['en-us','en'],it:['it-it','it'],es:['es-es','es'],de:['de-de','de'],fr:['fr-fr','fr'],'pt-BR':['pt-br','pt-br']}[L];
+$('appleImg').src='badges/apple-'+B[0]+'.svg';$('appleImg').alt=s.appStoreSmall+' App Store';
+$('playImg').src='badges/google-'+B[1]+'.png';$('playImg').alt=s.playSmall+' Google Play';
+// The visitor's own store first.
+if(/android/i.test(navigator.userAgent))$('play').parentNode.insertBefore($('play'),$('apple'));
+$('ctaText').textContent=s.ctaText;$('cta').textContent=s.cta;$('note').textContent=s.note;
+var code=new URLSearchParams(location.search).get('c')||'';var last=null;var timer=null;
+function show(text){$('card').hidden=true;$('msg').hidden=false;$('msg').textContent=text}
+function draw(){
+  var f=last;if(!f)return;var now=Date.now();var to=f.to,from=f.from;
+  var late=to.delay!=null&&to.delay>5,early=to.delay!=null&&to.delay<-5;
+  var depLate=from.delay!=null&&from.delay>5;
+  document.title=label(f.number)+' · Landly';
+  $('head').textContent=[label(f.number),f.airline,f.aircraft].filter(Boolean).join(' · ');
+  var st=s[f.phase]||s.scheduled,color=MUTED,big='',sub='';
+  if(f.phase==='cancelled'||f.phase==='diverted'){color=BAD;big=st}
+  else if(f.phase==='landed'){color=late?WARN:GOOD;big=to.best?fill(s.landedAt,{time:to.best}):st}
+  else if(f.phase==='unconfirmed'){big=st;sub=to.best?fill(s.expectedAt,{time:to.best}):''}
+  else if(f.phase==='inFlight'){color=YELLOW;big=to.at&&to.at>now?fill(s.landsIn,{span:span((to.at-now)/60000)}):(to.best?fill(s.arrivesAt,{time:to.best}):st)}
+  else{if(f.phase==='boarding'){color=YELLOW;if(f.gateClosed)st=s.gateClosed}else if(depLate){color=WARN;st=fill(s.late,{span:span(from.delay)})}else{color=GOOD;st=s.onTime}
+    big=to.best?fill(s.arrivesAt,{time:to.best}):st}
+  if(!sub&&f.phase!=='cancelled'&&f.phase!=='diverted'){var parts=[];
+    if(late)parts.push(fill(s.late,{span:span(to.delay)}));else if(early)parts.push(fill(s.early,{span:span(to.delay)}));
+    if((late||early)&&to.scheduled)parts.push(fill(s.wasAt,{time:to.scheduled}));
+    if(to.city)parts.push(fill(s.inCity,{city:to.city}));sub=parts.join(' · ')}
+  $('status').textContent=st;$('status').style.color=color;$('big').textContent=big;$('sub').textContent=sub;
+  $('fromCode').textContent=from.code||'';$('toCode').textContent=to.code||'';
+  var left=f.phase==='inFlight'||f.phase==='landed'||f.phase==='unconfirmed';
+  $('fromText').textContent=[from.city,from.best?fill(left?s.departed:s.departs,{time:from.best}):null].filter(Boolean).join(' · ');
+  $('toText').textContent=[to.city,to.best].filter(Boolean).join(' · ');
+  var p=f.phase==='landed'||f.phase==='unconfirmed'?1:(f.phase==='inFlight'&&from.at&&to.at&&to.at>from.at?Math.max(0,Math.min(1,(now-from.at)/(to.at-from.at))):0);
+  $('fill').style.width=Math.round(p*100)+'%';$('bar').setAttribute('aria-valuenow',Math.round(p*100));
+  var tiles=$('tiles');tiles.textContent='';
+  var list=left?[[s.terminal,to.terminal],[s.gate,to.gate],[s.belt,to.belt]]:[[s.terminal,from.terminal],[s.gate,from.gate]];
+  list.forEach(function(t){if(!t[1])return;var d=document.createElement('div');d.className='tile';var l=document.createElement('span');l.className='mono';l.textContent=t[0];var v=document.createElement('b');v.textContent=t[1];d.appendChild(l);d.appendChild(v);tiles.appendChild(d)});
+  tiles.hidden=!tiles.childNodes.length;
+  $('updated').textContent=s.updated;$('msg').hidden=true;$('card').hidden=false;
+}
+function load(){
+  if(!/^[A-Za-z0-9_-]{16}$/.test(code)){show(s.notFound);return}
+  fetch(API+'?c='+encodeURIComponent(code)).then(function(r){return r.json().then(function(j){return{status:r.status,body:j}})}).then(function(r){
+    if(r.status===404){stop();show(s.notFound);return}
+    if(r.status===410){stop();show(s.expired);return}
+    if(r.body&&r.body.flight){last=r.body.flight;draw()}else if(!last)show(s.noData);
+  }).catch(function(){if(!last)show(s.error)});
+}
+function stop(){if(timer)clearInterval(timer);timer=null}
+show(s.loading);load();
+timer=setInterval(function(){if(!document.hidden)load()},60000);
+setInterval(draw,20000);
+document.addEventListener('visibilitychange',function(){if(!document.hidden)load()});
+})();
+</script></body></html>
